@@ -26,7 +26,7 @@ else:
 
 MODERN_PYTHON = sys.version_info.major >= 3
 if MODERN_PYTHON:
-    basestring = str
+    str = str
 
 
 class Copilot(object):
@@ -55,7 +55,7 @@ class Copilot(object):
 
     def inject_context(self):
         """Return a dict used for a template context."""
-        navbar = filter(lambda entry: entry.visible, self.navbar_entries)
+        navbar = [entry for entry in self.navbar_entries if entry.visible]
         return {'navbar': navbar}
 
     def register_entry(self, navbar_kwargs):
@@ -69,7 +69,7 @@ class Copilot(object):
         path = navbar_kwargs.pop('path')
         # If a single object is used rather than an iterable (including
         # a single string), wrap it before using.
-        if not hasattr(path, '__iter__') or isinstance(path, basestring):
+        if not hasattr(path, '__iter__') or isinstance(path, str):
             path = [path]
 
         entry_group = self.navbar_entries
@@ -170,7 +170,7 @@ class NavbarEntry(object):
     @property
     def visible_children(self):
         """Return visible children."""
-        return filter(lambda child: child.visible, self.children)
+        return [child for child in self.children if child.visible]
 
     def url(self, default_href='#'):
         """Return a rendered URL for this entry.
